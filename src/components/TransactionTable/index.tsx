@@ -15,8 +15,14 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
           <th scope="col">#</th>
           <th scope="col">From</th>
           <th scope="col">To</th>
-          <th scope="col">Amount</th>
-          <th scope="col">Timestamp</th>
+          <th scope="col">StudentName</th>
+          <th scope="col">TeacherName</th>
+          <th scope="col">CourseName</th>
+          <th scope="col">Mark1</th>
+          <th scope="col">Mark2</th>
+          <th scope="col">Mark3</th>
+          <th scope="col">AvgMark</th>
+
           <th scope="col">Valid?</th>
         </tr>
       </thead>
@@ -45,18 +51,27 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
               )}
             </td>
             <td className="text-truncate" style={{ maxWidth: "100px" }}>
+              {tx.data.student.name}
+            </td>
+            <td className="text-truncate" style={{ maxWidth: "100px" }}>
+              {tx.data.teacher.name}
+            </td>
+            <td className="text-truncate" style={{ maxWidth: "100px" }}>
+              {tx.data.course.name}
+            </td>
+            <td className="text-truncate" style={{ maxWidth: "100px" }}>
               Mark 1: {tx.data.mark1}
             </td>
-            <td>Mark 2: {tx.data.mark2}</td>
-            <td>Mark 3: {tx.data.mark3}</td>
-            <td>AvgMark : {tx.data.agvMark}</td>
-            <td>
-              {tx.timestamp}
-              <br />
-              <span className="text-muted">
-                <small>{tx.timestamp}</small>
-              </span>
+            <td className="text-truncate" style={{ maxWidth: "100px" }}>
+              Mark 2: {tx.data.mark2}
             </td>
+            <td className="text-truncate" style={{ maxWidth: "100px" }}>
+              Mark 3: {tx.data.mark3}
+            </td>
+            <td className="text-truncate" style={{ maxWidth: "100px" }}>
+              AvgMark : {tx.data.agvMark}
+            </td>
+
             <td style={{ maxWidth: "40px" }}>
               {tx.isValid() ? <span>✓</span> : <span>✗</span>}
             </td>

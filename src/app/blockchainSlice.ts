@@ -9,6 +9,7 @@ import {
   Block,
 } from "./blockchain";
 import { ec as EC } from "elliptic";
+import { InputFormState } from "../pages/CreateTransaction";
 
 const ec = new EC("secp256k1");
 const myKey = ec.keyFromPrivate(
@@ -21,11 +22,12 @@ const ql = new Blockchain();
 export interface BlockchainState {
   blockchain: Blockchain;
   address: string;
+  isMining: boolean;
 }
 
 const teacher: Teacher = {
   teacherID: 1,
-  name: "tu",
+  name: "nguyen van a",
   level: "aaa",
   department: "cntt",
   phone: "123",
@@ -33,13 +35,13 @@ const teacher: Teacher = {
 
 const student: Student = {
   studentID: 1,
-  name: "tu hoc sinh",
+  name: "vu anh tu",
   dob: "aaa",
   phone: "123",
 };
 
 const course: Course = {
-  name: "string",
+  name: "vat ly 1",
   semester: "ki 1 2021",
   numberOfTC: 2,
 };
@@ -65,24 +67,58 @@ ql.minePendingTransactions(myWalletAddress);
 const initialState: BlockchainState = {
   blockchain: ql,
   address: myWalletAddress,
+  isMining: false,
 };
 export const blockchainSlice = createSlice({
   name: "blockchain",
   initialState,
   reducers: {
-    increment: (state) => {},
-
-    incrementByAmount: (state, action: PayloadAction<number>) => {},
-    createTransaction: (state, action: PayloadAction<Block>) => {
-      state.blockchain.chain.push(action.payload);
+    createTransaction: (state, action: PayloadAction<InputFormState>) => {
+      const course: Course = {
+        name: action.payload.courseName,
+        semester: action.payload.semester,
+        numberOfTC: action.payload.numberOfTC,
+      };
+      const student: Student = {
+        studentID: action.payload.studentID,
+        dob: action.payload.DOB,
+        name: action.payload.studentName,
+        phone: action.payload.studentPhone,
+      };
+      const teacher: Teacher = {
+        teacherID: action.payload.teacherID,
+        department: action.payload.department,
+        name: action.payload.studentName,
+        phone: action.payload.studentPhone,
+        level: action.payload.level,
+      };
+      const data = new Data(
+        teacher,
+        student,
+        course,
+        action.payload.mark1,
+        action.payload.mark2,
+        action.payload.mark3
+      );
+      const tx = new Transaction(
+        myWalletAddress,
+        action.payload.toAddress,
+        data
+      );
+      tx.signTransaction(myKey);
+      state.blockchain.addTransaction(tx);
     },
     changeDifficulty: (state, action: PayloadAction<number>) => {
       state.blockchain.difficulty = action.payload;
+    },
+    mineBlock: (state) => {
+      state.blockchain.minePendingTransactions(state.address);
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { increment, incrementByAmount } = blockchainSlice.actions;
+export const { createTransaction, mineBlock, changeDifficulty } =
+  blockchainSlice.actions;
 
 export default blockchainSlice.reducer;

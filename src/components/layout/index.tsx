@@ -1,7 +1,10 @@
 import React from "react";
 import { Outlet, Link } from "react-router-dom";
+import { RootState } from "../../app/store";
+import { useSelector } from "react-redux";
+const Layout = () => {
+  const { blockchain } = useSelector((state: RootState) => state.blockchain);
 
-const index = () => {
   return (
     <div>
       <nav className="navbar navbar-dark bg-dark">
@@ -25,7 +28,6 @@ const index = () => {
             >
               Pending transactions
             </Link>
-            <span className="badge badge-light"></span>
           </button>
           &nbsp;
           <button className="btn btn-outline-light">
@@ -43,4 +45,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Layout;

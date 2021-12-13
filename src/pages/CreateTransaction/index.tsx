@@ -1,10 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Formik, Field, Form } from "formik";
+import { Formik } from "formik";
+import { RootState } from "../../app/store";
 import * as Yup from "yup";
-
+import { useDispatch, useSelector } from "react-redux";
+import { createTransaction } from "../../app/blockchainSlice";
 export interface InputFormState {
-  fromAddress: string;
   toAddress: string;
   studentID: number;
   studentName: string;
@@ -25,8 +26,11 @@ export interface InputFormState {
 
 const CreateTransaction = () => {
   const navigate = useNavigate();
+  const { address } = useSelector((state: RootState) => state.blockchain);
+  const dispatch = useDispatch();
   const fetchSubmit = (value: InputFormState) => {
-    console.log("object: ", value);
+    dispatch(createTransaction(value));
+    navigate("/", { replace: true });
   };
   return (
     <div className="container">
@@ -37,7 +41,6 @@ const CreateTransaction = () => {
 
       <Formik
         initialValues={{
-          fromAddress: "",
           toAddress: "",
           studentID: 0,
           studentName: "",
@@ -56,7 +59,7 @@ const CreateTransaction = () => {
           mark3: 0,
         }}
         validationSchema={Yup.object().shape({
-          fromAddress: Yup.string().max(255).required("this field is required"),
+          toAddress: Yup.string().max(255).required("this field is required"),
           studentName: Yup.string().max(255).required("this field is required"),
           DOB: Yup.string().max(255).required("this field is required"),
           studentPhone: Yup.string()
@@ -70,16 +73,16 @@ const CreateTransaction = () => {
           department: Yup.string().max(255).required("this field is required"),
           courseName: Yup.string().max(255).required("this field is required"),
           semester: Yup.string().max(255).required("this field is required"),
-          studentID: Yup.number().max(255).required("this field is required"),
-          teacherID: Yup.number().max(255).required("this field is required"),
-          numberOfTC: Yup.number().max(255).required("this field is required"),
-          mark1: Yup.number().max(255).required("this field is required"),
-          mark2: Yup.number().max(255).required("this field is required"),
-          mark3: Yup.number().max(255).required("this field is required"),
+          studentID: Yup.number().required("this field is required"),
+          teacherID: Yup.number().required("this field is required"),
+          numberOfTC: Yup.number().max(10).required("this field is required"),
+          mark1: Yup.number().max(10).required("this field is required"),
+          mark2: Yup.number().max(10).required("this field is required"),
+          mark3: Yup.number().max(10).required("this field is required"),
         })}
         onSubmit={(values, { setSubmitting }) => {
           fetchSubmit(values);
-          console.log("Values: " + values);
+
           setSubmitting(false);
         }}
       >
@@ -93,20 +96,22 @@ const CreateTransaction = () => {
           values,
         }) => (
           <form onSubmit={handleSubmit}>
-            <div className="form-group">
+            <div className="form-group py-2">
               <label htmlFor="fromAddress">From address</label>
-              <Field id="fromAddress" name="fromAddress" placeholder="" />
+              <input
+                type="text"
+                className="form-control"
+                id="fromAddress"
+                aria-describedby="fromAddressHelp"
+                name="fromAddress"
+                value={address}
+                disabled
+              />
               <small id="fromAddressHelp" className="form-text text-muted">
                 This is teacher's wallet address.
               </small>
-
-              {errors.fromAddress && touched.fromAddress ? (
-                <div className="alert alert-danger" role="alert">
-                  {errors.fromAddress}
-                </div>
-              ) : null}
             </div>
-            <div className="form-group">
+            <div className="form-group py-2">
               <label htmlFor="toAddress">To address</label>
               <input
                 type="text"
@@ -115,6 +120,8 @@ const CreateTransaction = () => {
                 aria-describedby="toAddressHelp"
                 name="toAddress"
                 value={values.toAddress}
+                onBlur={handleBlur}
+                onChange={handleChange}
               />
               <small id="toAddressHelp" className="form-text text-muted">
                 The address of the wallet where you want to send the mark to.
@@ -122,7 +129,7 @@ const CreateTransaction = () => {
                 blockchain of student)
               </small>
             </div>
-            <div className="form-group">
+            <div className="form-group py-2">
               <label htmlFor="studentID">studentID</label>
               <input
                 type="number"
@@ -140,7 +147,7 @@ const CreateTransaction = () => {
                 </div>
               ) : null}
             </div>
-            <div className="form-group">
+            <div className="form-group py-2">
               <label htmlFor="studentName">studentName</label>
               <input
                 type="text"
@@ -158,7 +165,7 @@ const CreateTransaction = () => {
                 </div>
               ) : null}
             </div>
-            <div className="form-group">
+            <div className="form-group py-2">
               <label htmlFor="DOB">DOB</label>
               <input
                 type="text"
@@ -176,7 +183,7 @@ const CreateTransaction = () => {
                 </div>
               ) : null}
             </div>
-            <div className="form-group">
+            <div className="form-group py-2">
               <label htmlFor="studentPhone">studentPhone</label>
               <input
                 type="text"
@@ -194,7 +201,7 @@ const CreateTransaction = () => {
                 </div>
               ) : null}
             </div>
-            <div className="form-group">
+            <div className="form-group py-2">
               <label htmlFor="studentID">teacherID</label>
               <input
                 type="number"
@@ -212,7 +219,7 @@ const CreateTransaction = () => {
                 </div>
               ) : null}
             </div>
-            <div className="form-group">
+            <div className="form-group py-2">
               <label htmlFor="teacherName">teacherName</label>
               <input
                 type="text"
@@ -230,7 +237,7 @@ const CreateTransaction = () => {
                 </div>
               ) : null}
             </div>
-            <div className="form-group">
+            <div className="form-group py-2">
               <label htmlFor="level">level</label>
               <input
                 type="text"
@@ -248,7 +255,7 @@ const CreateTransaction = () => {
                 </div>
               ) : null}
             </div>
-            <div className="form-group">
+            <div className="form-group py-2">
               <label htmlFor="department">department</label>
               <input
                 type="text"
@@ -266,7 +273,7 @@ const CreateTransaction = () => {
                 </div>
               ) : null}
             </div>
-            <div className="form-group">
+            <div className="form-group py-2">
               <label htmlFor="teacherPhone">teacherPhone</label>
               <input
                 type="text"
@@ -284,7 +291,7 @@ const CreateTransaction = () => {
                 </div>
               ) : null}
             </div>
-            <div className="form-group">
+            <div className="form-group py-2">
               <label htmlFor="courseName">courseName</label>
               <input
                 type="text"
@@ -302,7 +309,7 @@ const CreateTransaction = () => {
                 </div>
               ) : null}
             </div>
-            <div className="form-group">
+            <div className="form-group py-2">
               <label htmlFor="semester">semester</label>
               <input
                 type="text"
@@ -320,7 +327,7 @@ const CreateTransaction = () => {
                 </div>
               ) : null}
             </div>
-            <div className="form-group">
+            <div className="form-group py-2">
               <label htmlFor="numberOfTC">numberOfTC</label>
               <input
                 type="number"
@@ -338,7 +345,7 @@ const CreateTransaction = () => {
                 </div>
               ) : null}
             </div>
-            <div className="form-group">
+            <div className="form-group py-2">
               <label htmlFor="mark1">mark1</label>
               <input
                 type="number"
@@ -356,7 +363,7 @@ const CreateTransaction = () => {
                 </div>
               ) : null}
             </div>
-            <div className="form-group">
+            <div className="form-group py-2">
               <label htmlFor="mark2">mark2</label>
               <input
                 type="number"
@@ -374,7 +381,7 @@ const CreateTransaction = () => {
                 </div>
               ) : null}
             </div>
-            <div className="form-group">
+            <div className="form-group py-2">
               <label htmlFor="mark3">mark3</label>
               <input
                 type="number"
@@ -392,7 +399,13 @@ const CreateTransaction = () => {
                 </div>
               ) : null}
             </div>
-            <button type="submit">Submit</button>
+            <button
+              type="submit"
+              className="btn btn-primary mt-2"
+              disabled={isSubmitting}
+            >
+              Submit
+            </button>
           </form>
         )}
       </Formik>

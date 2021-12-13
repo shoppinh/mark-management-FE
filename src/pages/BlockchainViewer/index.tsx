@@ -2,14 +2,12 @@ import React from "react";
 import BlockView from "../../components/BlockView";
 import { RootState } from "../../app/store";
 import { useSelector } from "react-redux";
-import { Block } from "../../app/blockchain";
 import TransactionTable from "../../components/TransactionTable";
 
 const BlockchainViewer = () => {
   const { address, blockchain } = useSelector(
     (state: RootState) => state.blockchain
   );
-
   const [blockSelected, setBlockSelected] = React.useState<number>(0);
 
   const handleSelectBlock = (index: number) => {
