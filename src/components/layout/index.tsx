@@ -9,14 +9,7 @@ const Layout = () => {
     <div>
       <nav className="navbar navbar-dark bg-dark">
         <Link to="/" className="navbar-brand">
-          <img
-            src="assets/img/logo-savjee.svg"
-            width="30"
-            height="30"
-            className="d-inline-block align-top"
-            alt=""
-          />
-          &nbsp;KienneikCoin
+          MarkManagement
         </Link>
 
         <div>

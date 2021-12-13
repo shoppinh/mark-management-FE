@@ -174,12 +174,14 @@ export class Blockchain {
 
   constructor() {
     this.chain = [this.createGenesisBlock()];
-    this.difficulty = 1;
+    this.difficulty = 4;
     this.pendingTransactions = [];
   }
 
   createGenesisBlock(): Block {
-    return new Block(Date.parse("2021-01-01"), [], "0");
+    const genesisBlock = new Block(Date.parse("2021-01-01"), [], "0");
+    genesisBlock.hash = genesisBlock.calculateHash();
+    return genesisBlock;
   }
 
   getLatestBlock(): Block {
