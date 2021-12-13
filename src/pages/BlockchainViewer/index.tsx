@@ -18,6 +18,13 @@ const BlockchainViewer = () => {
   return (
     <>
       <div className="container">
+        <h1>Blocks on chain</h1>
+        <p>
+          Each card represents a block on the chain. Click on a block to see the
+          transactions stored inside.
+        </p>
+      </div>
+      <div className="container">
         {blockchain.chain.map((block, index) => (
           <BlockView
             block={block}
